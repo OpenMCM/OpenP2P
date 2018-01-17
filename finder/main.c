@@ -14,11 +14,13 @@
 #include <netinet/in.h>
 #include <unistd.h>
 
+#include "set/set.h"
+
 #define BUFFER_SIZE 1024
 #define on_error(...) { fprintf(stderr, __VA_ARGS__); fflush(stderr); exit(1); }
 
 int is_find_request(char *message, int mess_len) {
-  if(mess_len >= 1 && *message == "D") {
+  if(mess_len >= 1 && *message == 'F') {
     return 1;
   }
   else {
@@ -27,7 +29,7 @@ int is_find_request(char *message, int mess_len) {
 }
 
 int is_discover_request(char *message, int mess_len) {
-  if(mess_len >= 1 && *message == "D") {
+  if(mess_len >= 1 && *message == 'D') {
     return 1;
   }
   else {
@@ -84,15 +86,19 @@ int main (int argc, char *argv[]) {
     //TODO: Fork here
 
     while (1) {
+      // read contains the length of the message (+1 if you count '/n')
+      // (which it does)
       int read = recv(client_fd, buf, BUFFER_SIZE, 0);
 
       if (!read) {
-        process_message(buf, BUFFER_SIZE);
         break;
       }
       if (read < 0) on_error("Client read failed\n");
 
-      err = send(client_fd, buf, read, 0);
+      process_message(buf, BUFFER_SIZE, client_fd);
+      printf("read = %d\nResponding to client...\n", read);
+      // Gonna need this code later
+      //err = send(client_fd, buf, read, 0);
       if (err < 0) on_error("Client write failed\n");
     }
   }
