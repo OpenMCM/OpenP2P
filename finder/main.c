@@ -17,6 +17,37 @@
 #define BUFFER_SIZE 1024
 #define on_error(...) { fprintf(stderr, __VA_ARGS__); fflush(stderr); exit(1); }
 
+int is_find_request(char *message, int mess_len) {
+  if(mess_len >= 1 && *message == "D") {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
+int is_discover_request(char *message, int mess_len) {
+  if(mess_len >= 1 && *message == "D") {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
+void process_message(char *message, int mess_len) {
+  return;
+  if(is_find_request(message, mess_len)) {
+    //Process find request
+  }
+  else if(is_discover_request(message, mess_len)) {
+    //Process discover request
+  }
+  else {
+    //Error case
+  }
+}
+
 int main (int argc, char *argv[]) {
   if (argc < 2) on_error("Usage: %s [port]\n", argv[0]);
 
@@ -50,10 +81,15 @@ int main (int argc, char *argv[]) {
 
     if (client_fd < 0) on_error("Could not establish new connection\n");
 
+    //TODO: Fork here
+
     while (1) {
       int read = recv(client_fd, buf, BUFFER_SIZE, 0);
 
-      if (!read) break; // done reading
+      if (!read) {
+        process_message(buf, BUFFER_SIZE);
+        break;
+      }
       if (read < 0) on_error("Client read failed\n");
 
       err = send(client_fd, buf, read, 0);
