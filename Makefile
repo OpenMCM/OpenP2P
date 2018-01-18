@@ -1,10 +1,10 @@
 CC=gcc
-CFLAGS=-Wall
+CFLAGS=-Wall -Wpedantic -Wextra
 
 all: finder/finder
 
 finder/finder: finder/main.c
-		$(CC) finder/main.c -o finder/finder set/set.c
+		$(CC) $(CFLAGS) finder/main.c set/set.c -o finder/finder
 
 clean:
 		rm finder/finder

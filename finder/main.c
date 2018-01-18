@@ -14,7 +14,7 @@
 #include <netinet/in.h>
 #include <unistd.h>
 
-#include "set/set.h"
+#include "../set/set.h"
 
 #define BUFFER_SIZE 1024
 #define on_error(...) { fprintf(stderr, __VA_ARGS__); fflush(stderr); exit(1); }
@@ -37,7 +37,7 @@ int is_discover_request(char *message, int mess_len) {
   }
 }
 
-void process_message(char *message, int mess_len) {
+void process_message(char *message, int mess_len, int client_fd) {
   return;
   if(is_find_request(message, mess_len)) {
     //Process find request
@@ -51,6 +51,7 @@ void process_message(char *message, int mess_len) {
 }
 
 int main (int argc, char *argv[]) {
+
   if (argc < 2) on_error("Usage: %s [port]\n", argv[0]);
 
   int port = atoi(argv[1]);
