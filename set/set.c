@@ -47,9 +47,6 @@ void set_remove(set *s, int data) {
       if(curr_elem == s->head) {
         s->head = curr_elem->next;
       }
-      printf("Trying...\n");
-      int i = iterate(s, 5);
-      printf("Done!!\n");
       set_remove_helper(curr_elem);
 
       free(curr_elem);
@@ -63,6 +60,7 @@ void set_remove(set *s, int data) {
   return;
 }
 
+// A handy debbugging function to make sure no pointers have been corrupted
 int iterate(set *s) {
   printf("Begin Iterate\n");
   elem *curr_elem = s->head;
@@ -77,19 +75,15 @@ int iterate(set *s) {
 }
 
 int is_in_set(set *s, int data) {
-  printf("Begin\n");
-  int i = iterate(s);
   elem *curr_elem = s->head;
 
   while(curr_elem != NULL) {
-    printf("%lx, data: %d\n", (unsigned long)curr_elem, curr_elem->data);
     if(curr_elem->data == data) {
-      printf("End\n");
       return 1;
     }
     curr_elem = curr_elem->next;
   }
-  printf("End\n");
+  
   return 0;
 }
 
@@ -109,6 +103,5 @@ void set_add_helper(set *s, elem *l) {
 void set_add(set *s, int data) {
   elem *l = init_elem(data);
   set_add_helper(s, l);
-  int i = iterate(s);
   s->size += 1;
 }

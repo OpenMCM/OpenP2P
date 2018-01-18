@@ -37,12 +37,28 @@ int is_discover_request(char *message, int mess_len) {
   }
 }
 
-void process_message(char *message, int mess_len, int client_fd) {
-  return;
+void process_message(char *message, int mess_len, int client_fd,
+   struct sockaddr_in client_info, set *node_list) {
   if(is_find_request(message, mess_len)) {
-    //Process find request
+    printf("Processing 'FIND' request...\n");
+
+    // Naive implementation: send back entire nodeList
+    elem *curr_elem = node_list->head;
+
+    while(curr_elem != NULL) {
+      char temp[9];
+      sprintf(temp, "%d\n", client_info.sin_addr.s_addr);
+      int err = send(client_fd, temp, 9, 0);
+      if (err < 0) on_error("Client write failed\n");
+      curr_elem = curr_elem->next;
+    }
   }
   else if(is_discover_request(message, mess_len)) {
+    printf("Processing 'DISCOVER' request...\n");
+    if(!is_in_set(node_list, client_info.sin_addr.s_addr)) {
+      set_add(node_list, client_info.sin_addr.s_addr);
+    }
+
     //Process discover request
   }
   else {
@@ -59,6 +75,8 @@ int main (int argc, char *argv[]) {
   int server_fd, client_fd, err;
   struct sockaddr_in server, client;
   char buf[BUFFER_SIZE];
+
+  set *node_list = init_set();
 
   server_fd = socket(AF_INET, SOCK_STREAM, 0);
   if (server_fd < 0) on_error("Could not create socket\n");
@@ -96,7 +114,9 @@ int main (int argc, char *argv[]) {
       }
       if (read < 0) on_error("Client read failed\n");
 
-      process_message(buf, BUFFER_SIZE, client_fd);
+      printf("client = %x\n", client.sin_addr.s_addr);
+      process_message(buf, BUFFER_SIZE, client_fd, client, node_list);
+      printf("%s\n", buf);
       printf("read = %d\nResponding to client...\n", read);
       // Gonna need this code later
       //err = send(client_fd, buf, read, 0);
