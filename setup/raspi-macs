@@ -1,0 +1,22 @@
+MAC addresses for Bluetooth, Ethernet and Wireless LAN on the Raspis.
+
+A
+hci0: b827eb375c30
+eth0: b827eb9df69a
+wlan0: b827ebc8a3cf
+B
+hci0: b827eb6de9e9
+eth0: b827ebc74343
+wlan0: b827eb921616
+C
+hci0: b827eb7f6ab4
+eth0: b827ebd5c01e
+wlan0: b827eb80954b
+D
+hci0: b827ebb3c419
+eth0: b827eb196eb3
+wlan0: b827eb4c3be6
+E
+hci0: b827eb6260c4
+eth0: b827ebc8ca6e
+wlan0: b827eb9d9f3b
